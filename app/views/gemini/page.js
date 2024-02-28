@@ -1,5 +1,4 @@
 "use client";
-// MyComponent.js
 import { useEffect, useRef } from "react";
 import ChatMessage from "./components/ChatMessage";
 import ChatInput from "./components/ChatInput";
@@ -15,6 +14,7 @@ export default function MyComponent() {
   } = useChat();
 
   const chatContainerRef = useRef(null);
+  const chatInputRef = useRef(null);
 
   useEffect(() => {
     // Scroll to bottom when chat history updates
@@ -22,6 +22,12 @@ export default function MyComponent() {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [chatHistory]);
+
+  useEffect(() => {
+    if (chatContainerRef.current && chatInputRef.current) {
+      chatContainerRef.current.style.paddingBottom = `${chatInputRef.current.offsetHeight}px`;
+    }
+  }, [chatHistory, chatInputRef.current?.offsetHeight]);
 
   const handleSuggestionClick = (suggestion) => {
     setSuggestedResponses([suggestion]);
@@ -34,7 +40,7 @@ export default function MyComponent() {
           <ChatMessage key={index} message={chat.user} />
         ))}
       </div>
-      <div className="px-4 py-3 bg-white border-t border-gray-300">
+      <div className="px-4 py-3 bg-white border-t border-gray-300 fixed bottom-0 w-full" ref={chatInputRef}>
         <div className="flex flex-col">
           <div className="mt-2 flex flex-wrap justify-start items-center gap-2 p-2">
             {isLoading ? (
@@ -65,4 +71,3 @@ export default function MyComponent() {
     </div>
   );
 }
-
