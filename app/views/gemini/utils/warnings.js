@@ -1,0 +1,1 @@
+export const warningText = "User input contains profanity, hate speech, or other objectionable content. Response generation aborted."
