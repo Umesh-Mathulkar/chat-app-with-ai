@@ -1,40 +1,57 @@
 // mark as client component
 "use client";
 
-// importing necessary functions
-import { useSession, signIn, signOut } from "next-auth/react"
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useSession, signIn, signOut } from "next-auth/react";
 import Image from "next/image";
 
 export default function Home() {
-  // extracting data from usesession as session
-  const { data: session } = useSession()
+  const { data: session } = useSession();
+  const router = useRouter();
 
-  // checking if sessions exists
+  // Redirect to /views/chats after successful login
+  useEffect(() => {
+    if (session) {
+      router.push('/views/chats');
+    }
+  }, [session]);
+
   if (session) {
-    // rendering components for logged in users
     return (
-      <div className="w-full h-screen flex flex-col justify-center items-center">
-        <div className="w-44 h-44 relative mb-4">
+      <div className="flex flex-col items-center justify-center min-h-screen py-2">
         <Image
+          className="mb-8 rounded-full"
           src={session.user.image}
-          fill
-          alt=""
-          className="object-cover rounded-full"
+          alt="Profile Picture"
+          width={144}
+          height={144}
         />
-        </div>
-        <p className="text-2xl mb-2">Welcome <span className="font-bold">{session.user.name}</span>. Signed In As</p>
-        <p className="font-bold mb-4">{session.user.email}</p>
-        <button className="bg-red-600 py-2 px-6 rounded-md" onClick={() => signOut()}>Sign out</button>
+        <h2 className="text-2xl mb-2">Welcome, {session.user.name}!</h2>
+        <p className="mb-4">{session.user.email}</p>
+        <button
+          className="bg-red-600 text-white active:bg-red-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
+          type="button"
+          style={{ transition: "all .15s ease" }}
+          onClick={() => signOut()}
+        >
+          Sign Out
+        </button>
       </div>
-    )
+    );
   }
 
-  // rendering components for not logged in users
   return (
-    <div className="w-full h-screen flex flex-col justify-center items-center">
-        <p className="text-2xl mb-2">Not Signed In</p>
-        <button className="bg-blue-600 py-2 px-6 rounded-md mb-2" onClick={() => signIn('google')}>Sign in with google</button>
-        {/* <button className="bg-none border-gray-300 border py-2 px-6 rounded-md mb-2" onClick={() => signIn('github')}>Sign in with github</button> */}
+    <div className="flex flex-col items-center justify-center min-h-screen py-2">
+      <h2 className="text-2xl mb-2">Please sign in</h2>
+      <button
+        className="bg-blue-600 text-white active:bg-blue-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
+        type="button"
+        style={{ transition: "all .15s ease" }}
+        onClick={() => signIn('google')}
+      >
+        Sign in with Google
+      </button>
     </div>
-  )
+  );
 }
