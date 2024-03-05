@@ -1,4 +1,3 @@
-// useChat.js
 import { useState, useEffect, useRef } from "react";
 import { generateResponse } from "../utils/responseGenerator";
 import { io } from "socket.io-client";
@@ -13,7 +12,7 @@ const useChat = () => {
   const [selectedResponse, setSelectedResponse] = useState("");
   const [chatRoomId, setChatRoomId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const[receiver,setReceiver]=useState('')
+  const [receiver, setReceiver] = useState('');
   const socketRef = useRef();
   const requestQueue = useRef([]);
 
@@ -26,17 +25,33 @@ const useChat = () => {
   useEffect(() => {
     const socket = io.connect("https://chat-app-socket-server-0vpr.onrender.com");
 
-    socket.on("message", (data) => {
-      setChatHistory((prevChatHistory) => [...prevChatHistory,  data ]);
+    socket.on("message", async (data) => {
+      setChatHistory((prevChatHistory) => {
+        const updatedChatHistory = [...prevChatHistory, data];
+    
+        // Check if the new message was sent by the receiver
+        if (data.sender !== user.email) {
+       
+    
+          generateResponse(
+            data.message,
+            updatedChatHistory,
+            setChatHistory,
+            setSuggestedResponses
+          );
+        }
+    
+        return updatedChatHistory;
+      });
     });
+    
 
     const fetchMessages = async () => {
       try {
         if(chatRoomId){
-        const response = await axios.get(`https://chat-app-socket-server-0vpr.onrender.com/api/chat/messages/${chatRoomId}`);
-        const messages = response.data;
-    
-        setChatHistory(messages);
+          const response = await axios.get(`https://chat-app-socket-server-0vpr.onrender.com/api/chat/messages/${chatRoomId}`);
+          const messages = response.data;
+          setChatHistory(messages);
         }
       } catch (error) {
         console.error("Error fetching messages:", error);
@@ -51,23 +66,6 @@ const useChat = () => {
       socket.disconnect();
     };
   }, [chatRoomId]);
-
-  useEffect(() => {
-    const processUserInput = async () => {
-      if (requestQueue.current.length > 0) {
-        setIsLoading(true);
-        const userInput = requestQueue.current.shift();
-        await generateResponse(
-          userInput,
-          chatHistory,
-          setChatHistory,
-          setSuggestedResponses
-        );
-        setIsLoading(false);
-      }
-    };
-    processUserInput();
-  }, [requestQueue.current]);
 
   const handleUserInput = (userInput) => {
     if (userInput) {

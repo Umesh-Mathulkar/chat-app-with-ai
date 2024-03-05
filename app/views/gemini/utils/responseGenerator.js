@@ -20,7 +20,7 @@ const filterAndCheckUserInput = async (userInput) => {
     return filteredResultText;
   }
   
-export const generateResponse = async (userInput, chatHistory, setChatHistory, setSuggestedResponses) => {
+  export const generateResponse = async (userInput, chatHistory, setChatHistory, setSuggestedResponses) => {
     if (!userInput.trim()) {
       throw new Error("User input cannot be empty");
     }
@@ -33,12 +33,18 @@ export const generateResponse = async (userInput, chatHistory, setChatHistory, s
     }
   
     const model = getGenerativeModel({ model: "gemini-pro" });
+    
     const prompt = generatePrompt(userInput, chatHistory);
   
-    const result = await generateContentWithRetry(model, prompt, MAX_REQUESTS);
-  
-    handleGeneratedResponse(result, userInput, setChatHistory, setSuggestedResponses);
+    try {
+      const result = await generateContentWithRetry(model, prompt, MAX_REQUESTS);
+      handleGeneratedResponse(result, userInput, setChatHistory, setSuggestedResponses);
+    } catch (error) {
+      console.error("Error generating response:", error);
+      // Handle the error appropriately in your application
+    }
   };
+  
   
 
   

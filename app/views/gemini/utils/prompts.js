@@ -10,8 +10,9 @@ export const filterPrompt = (
 Please provide your classification for each category (e.g., Profanity: Yes, Hate Speech: No, Other Objectionable: No)`;
 
 export const generatePrompt = (userInput, chatHistory) => {
+
   const conversationHistory = chatHistory
-    .map((chat) => `User: ${chat.user}`)
+    .map((chat) => `User: ${chat.message}`)
     .join("\n");
 
   return `${conversationHistory}\n\n**Current Situation:** "${userInput}" was mentioned. **Here's the relevant context of our
