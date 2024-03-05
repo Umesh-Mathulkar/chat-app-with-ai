@@ -11,15 +11,7 @@ const nextConfig = {
             hostname: 'avatars.githubusercontent.com',
           },
         ],
-      },
-      async rewrites() {
-        return [
-          {
-            source: '/api/chat/:path*',
-            destination: 'http://localhost:5000/:path*', // Your Node.js server 
-          },
-        ];
-      },
+      }
 }
 
 export default nextConfig
