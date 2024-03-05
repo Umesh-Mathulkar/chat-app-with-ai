@@ -10,16 +10,25 @@ export const filterPrompt = (
 Please provide your classification for each category (e.g., Profanity: Yes, Hate Speech: No, Other Objectionable: No)`;
 
 export const generatePrompt = (userInput, chatHistory) => {
-
   const conversationHistory = chatHistory
-    .map((chat) => `User: ${chat.message}`)
-    .join("\n");
+     .map((chat) => `User: ${chat.message}`)
+     .join("\n");
 
-  return `${conversationHistory}\n\n**Current Situation:** "${userInput}" was mentioned. **Here's the relevant context of our
-   conversation:**\n* [Summarize 2-3 key points from the history]\n\n**Relation Judgment:** Based on our conversation, judge the 
-   relationship between us and provide suggestions accordingly.\n\n**Goal:** I want to respond in a friendly manner,
-     adapting to the language used in our chat. **Please provide 3 short, numbered suggestions for my reply:**\n`;
+  // Enhanced relevance filtering
+  const relevantHistory = chatHistory.filter(chat => {
+     const keywords = userInput.toLowerCase().split(' '); // Split input into keywords
+     return keywords.some(word => chat.message.toLowerCase().includes(word));
+  });
+
+  // Prioritize more recent messages
+  const weightedSummaryPoints = relevantHistory.map((chat, index, arr) => {
+    const weight = (arr.length - index) / arr.length; // Simple decay weighting
+    return `- ${chat.message} (Relevance Weight: ${weight.toFixed(2)})`; 
+  }).slice(0, 3);
+
+  return `${conversationHistory}\n\n**Current Situation:** "${userInput}" was mentioned. **Here's the relevant context of our conversation:**\n* ${weightedSummaryPoints.join('\n')}\n\n**Relation Judgment:** please check conversation thoroughly and judge our relation to respond accordingly\n\n**Goal:** to generate suggestion directly focusing on current situation \n**Please provide 3 short, numbered suggestions for my reply only suggestion in the format no anyother text just suggestions i am saying this strictly as i can direclty use it and dont tell me it is supportive,encouraging etc. i know that:**\n`;
 };
+
 
 
 export const rewritePrompt = (

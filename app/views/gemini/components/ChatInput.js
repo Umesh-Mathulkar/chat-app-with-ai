@@ -1,10 +1,11 @@
 // ChatInput.js
 import { useEffect, useRef, useState } from "react";
-
-export default function ChatInput({ onSubmit, suggestion = '', setSuggestion }) {
+import { setSuggestedResponses } from "@/app/store/chatSlice";
+import { useDispatch } from "react-redux";
+export default function ChatInput({ onSubmit, suggestion = '' }) {
   const [inputValue, setInputValue] = useState('');
   const textAreaRef = useRef(null);
-
+const dispatch = useDispatch()
   useEffect(() => {
     setInputValue(suggestion);
   }, [suggestion]);
@@ -20,7 +21,7 @@ export default function ChatInput({ onSubmit, suggestion = '', setSuggestion }) 
     event.preventDefault();
     onSubmit(inputValue);
     setInputValue('');
-    setSuggestion('');
+    dispatch(setSuggestedResponses(''));
   };
 
   return (

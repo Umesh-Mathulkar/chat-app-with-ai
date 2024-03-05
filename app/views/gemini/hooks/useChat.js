@@ -1,24 +1,30 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { generateResponse } from "../utils/responseGenerator";
 import { io } from "socket.io-client";
 import { useSession } from "next-auth/react";
 import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { 
+  setUser, 
+  setChatHistory, 
+  setSuggestedResponses, 
+  setSelectedResponse, 
+  setChatRoomId, 
+  setIsLoading, 
+  setReceiver, 
+  addChatMessage
+} from '@/app/store/chatSlice';
 
 const useChat = () => {
+  const dispatch = useDispatch();
   const { data: session, status } = useSession();
-  const [user, setUser] = useState(null);
-  const [chatHistory, setChatHistory] = useState([]);
-  const [suggestedResponses, setSuggestedResponses] = useState([]);
-  const [selectedResponse, setSelectedResponse] = useState("");
-  const [chatRoomId, setChatRoomId] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [receiver, setReceiver] = useState('');
+  const chatState = useSelector(state => state.chat);
   const socketRef = useRef();
   const requestQueue = useRef([]);
 
   useEffect(() => {
     if(status !== 'loading'){
-      setUser(session?.user);
+      dispatch(setUser(session?.user));
     } 
   }, [session, status]);
 
@@ -26,32 +32,29 @@ const useChat = () => {
     const socket = io.connect("https://chat-app-socket-server-0vpr.onrender.com");
 
     socket.on("message", async (data) => {
-      setChatHistory((prevChatHistory) => {
-        const updatedChatHistory = [...prevChatHistory, data];
-    
-        // Check if the new message was sent by the receiver
-        if (data.sender !== user.email) {
-       
-    
-          generateResponse(
-            data.message,
-            updatedChatHistory,
-            setChatHistory,
-            setSuggestedResponses
-          );
-        }
-    
-        return updatedChatHistory;
-      });
+      // Dispatch an action to append the new message to the chat history
+      dispatch(addChatMessage(data));
+
+      // Check if the new message was sent by the receiver
+      if (data.sender !== chatState.user.email) {
+        generateResponse(
+          data.message,
+          chatState.chatHistory,
+          dispatch
+        );
+      }
     });
-    
 
     const fetchMessages = async () => {
       try {
-        if(chatRoomId){
-          const response = await axios.get(`https://chat-app-socket-server-0vpr.onrender.com/api/chat/messages/${chatRoomId}`);
+        if (chatState.chatRoomId) {
+          const response = await axios.get(
+            `https://chat-app-socket-server-0vpr.onrender.com/api/chat/messages/${chatState.chatRoomId}?timestamp=${chatState.chatHistory.length ? chatState.chatHistory[chatState.chatHistory.length - 1].timestamp : ""}`
+          );
           const messages = response.data;
-          setChatHistory(messages);
+          if (messages.length) {
+            dispatch(setChatHistory([...chatState.chatHistory, ...messages]));
+          }
         }
       } catch (error) {
         console.error("Error fetching messages:", error);
@@ -65,25 +68,18 @@ const useChat = () => {
     return () => {
       socket.disconnect();
     };
-  }, [chatRoomId]);
+  }, [chatState.chatRoomId]);
+
 
   const handleUserInput = (userInput) => {
     if (userInput) {
-      socketRef.current.emit('chatMessage', userInput, [user.email, receiver], user.email);
+      socketRef.current.emit('chatMessage', userInput, [chatState.user.email, chatState.receiver], chatState.user.email);
       requestQueue.current = [...requestQueue.current, userInput];
     }
   };
 
   return {
-    chatHistory,
-    suggestedResponses,
     handleUserInput,
-    isLoading,
-    setSuggestedResponses,
-    setSelectedResponse,
-    selectedResponse,
-    setReceiver,
-    setChatRoomId
   };
 }
 

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import axios from "axios";
@@ -8,23 +8,21 @@ import ChatMessage from "../components/ChatMessage";
 import ChatInput from "../components/ChatInput";
 import SuggestionBox from "../components/SuggestionBox";
 import { useSession } from "next-auth/react";
-
+import {
+  setSelectedResponse,
+  setReceiver,
+  setChatRoomId,
+} from "@/app/store/chatSlice";
+import { useDispatch, useSelector } from "react-redux";
 export default function MyComponent({ params }) {
   const { data: session, status } = useSession();
   const [user, setUser] = useState(null);
   const receiver = decodeURIComponent(params.email[0]);
 
-  const {
-    chatHistory,
-    suggestedResponses,
-    setSuggestedResponses,
-    handleUserInput,
-    isLoading,
-    setSelectedResponse,
-    selectedResponse,
-    setReceiver,
-    setChatRoomId,
-  } = useChat();
+  const { chatHistory, suggestedResponses, selectedResponse, isLoading } =
+    useSelector((state) => state.chat);
+const dispatch= useDispatch()
+  const { handleUserInput } = useChat();
 
   useEffect(() => {
     if (status !== "loading") {
@@ -35,14 +33,13 @@ export default function MyComponent({ params }) {
   useEffect(() => {
     const fetchChatroom = async () => {
       try {
-        setReceiver(receiver);
-        const response = await axios.post("/api/chats/chatroom", {participants:[
-          receiver,
-          user.email,
-        ]});
+       await dispatch(setReceiver(receiver));
+        const response = await axios.post("/api/chats/chatroom", {
+          participants: [receiver, user.email],
+        });
         const chatroom = response.data.chatroom;
-     
-        setChatRoomId(chatroom._id);
+
+        await dispatch( setChatRoomId(chatroom._id));
       } catch (error) {
         console.error(error);
       }
@@ -60,7 +57,7 @@ export default function MyComponent({ params }) {
 
   const handleSuggestionClick = useCallback(
     (suggestion) => {
-      setSelectedResponse(suggestion);
+       dispatch(setSelectedResponse(suggestion));
     },
     [setSelectedResponse]
   );
@@ -93,7 +90,7 @@ export default function MyComponent({ params }) {
           <ChatInput
             onSubmit={handleUserInput}
             suggestion={selectedResponse}
-            setSuggestion={setSuggestedResponses}
+           
           />
         </div>
       </div>
