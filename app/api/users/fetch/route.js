@@ -14,7 +14,12 @@ export async function GET(req) {
       return NextResponse.json({ message: "No users found" }, { status: 404 });
     }
 
-    return NextResponse.json( { users }, { status: 200 });
+    return NextResponse.json(users, {
+      status: 200, 
+      headers: {
+        'Cache-Control': 'no-cache' 
+      }
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
