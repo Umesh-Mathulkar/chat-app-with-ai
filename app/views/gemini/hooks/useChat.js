@@ -34,15 +34,6 @@ const useChat = () => {
     socket.on("message", async (data) => {
       // Dispatch an action to append the new message to the chat history
       dispatch(addChatMessage(data));
-
-      // Check if the new message was sent by the receiver
-      if (data.sender !== chatState.user.email) {
-        generateResponse(
-          data.message,
-          chatState.chatHistory,
-          dispatch
-        );
-      }
     });
 
     const fetchMessages = async () => {
@@ -70,6 +61,18 @@ const useChat = () => {
     };
   }, [chatState.chatRoomId]);
 
+  useEffect(() => {
+    if (chatState.chatHistory.length > 0) {
+      const lastMessage = chatState.chatHistory[chatState.chatHistory.length - 1];
+      if (lastMessage.sender !== chatState.user.email) {
+        generateResponse(
+          lastMessage.message,
+          chatState.chatHistory,
+          dispatch
+        );
+      }
+    }
+  }, [chatState.chatHistory]);
 
   const handleUserInput = (userInput) => {
     if (userInput) {

@@ -10,26 +10,37 @@ export const filterPrompt = (
 Please provide your classification for each category (e.g., Profanity: Yes, Hate Speech: No, Other Objectionable: No)`;
 
 export const generatePrompt = (userInput, chatHistory) => {
-  const conversationHistory = chatHistory
-     .map((chat) => `User: ${chat.message}`)
-     .join("\n");
+  // Filter chat history to the last 3 hours
+  const now = new Date();
+  const threeHoursAgo = new Date(now.getTime() - 3 * 60 * 60 * 1000);
 
-  // Enhanced relevance filtering
-  const relevantHistory = chatHistory.filter(chat => {
-     const keywords = userInput.toLowerCase().split(' '); // Split input into keywords
-     return keywords.some(word => chat.message.toLowerCase().includes(word));
+  const recentChatHistory = chatHistory.filter((chat) => {
+    const chatTimestamp = new Date(chat.timestamp);
+    return chatTimestamp >= threeHoursAgo;
   });
 
-  // Prioritize more recent messages
-  const weightedSummaryPoints = relevantHistory.map((chat, index, arr) => {
-    const weight = (arr.length - index) / arr.length; // Simple decay weighting
-    return `- ${chat.message} (Relevance Weight: ${weight.toFixed(2)})`; 
-  }).slice(0, 3);
+  // Format conversation history
+  const conversationHistory = recentChatHistory
+    .map((chat) => `User: ${chat.message}`)
+    .join("\n");
 
-  return `${conversationHistory}\n\n**Current Situation:** "${userInput}" was mentioned. **Here's the relevant context of our conversation:**\n* ${weightedSummaryPoints.join('\n')}\n\n**Relation Judgment:** please check conversation thoroughly and judge our relation to respond accordingly\n\n**Goal:** to generate suggestion directly focusing on current situation \n**Please provide 3 short, numbered suggestions for my reply only suggestion in the format no anyother text just suggestions i am saying this strictly as i can direclty use it and dont tell me it is supportive,encouraging etc. i know that:**\n`;
+  // Enhanced relevance filtering
+  const relevantHistory = recentChatHistory.filter((chat) => {
+    const keywords = userInput.toLowerCase().split(" ");
+    return keywords.some((word) => chat.message.toLowerCase().includes(word));
+  });
+
+  // Prioritize more recent messages with relevance weighting
+  const weightedSummaryPoints = relevantHistory
+    .map((chat, index, arr) => {
+      const weight = (arr.length - index) / arr.length;
+      return `- ${chat.message} (Relevance Weight: ${weight.toFixed(2)})`;
+    })
+    .slice(0, 3);
+
+  // Construct the final prompt
+  return `${conversationHistory}\n\n**Current Situation:** "${userInput}" was mentioned. **Here's the relevant context of our conversation:**\n* ${weightedSummaryPoints.join("\n")}\n\n**Language adaption:** please use the language oand way of speaking from the past interaction\n**Relationship Judgement:**  Consider past interactions and judge my relationship. Are we formal, casual, friendly, etc.?\n\n**Goal:**  Provide 3 short, numbered, actionable suggestions for my reply. Tailor the tone and language to the inferred relationship and dont tell me that the suggestion is casual,formal etc or anything i know what is formal,casual,friendly you dont need to tell me that im saying this strictly dont tell me that for example i dont want  response like **Acknowledge their excitement:** "Haha, I'm glad you're excited about your new job!" i want only Haha, I'm glad you're excited about your new job!. ***SUGGESTIONS START*** \n`;
 };
-
-
 
 export const rewritePrompt = (
   text
