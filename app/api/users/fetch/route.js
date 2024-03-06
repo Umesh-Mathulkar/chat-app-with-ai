@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import clientPromise from "../../components/lib/mongodb";
 
 
-export async function GET(req) {
+export async function POST(req) {
   try {
     const client = await clientPromise;
     const db = client.db(); // your database name
@@ -14,12 +14,7 @@ export async function GET(req) {
       return NextResponse.json({ message: "No users found" }, { status: 404 });
     }
 
-    return NextResponse.json(users, {
-      status: 200, 
-      headers: {
-        'Cache-Control': 'no-cache' 
-      }
-    });
+    return NextResponse.json( { users }, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json(

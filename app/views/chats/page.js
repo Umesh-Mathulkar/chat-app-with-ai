@@ -14,7 +14,7 @@ export default function Users() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await axios.get("/api/users/fetch");
+        const res = await axios.post("/api/users/fetch");
         const users = res.data.users.filter(
           (user) => session && user.email !== session.user.email
         ); // Exclude the logged-in user
