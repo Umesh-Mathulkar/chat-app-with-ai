@@ -35,16 +35,42 @@ export default function ChatMessage({ message,sender, timestamp  }) {
     return () => clearInterval(timer);
   }, [timestamp]);
   const isCurrentUser = user?.email === sender;
+  const getMessageClass = () => {
+    let messageClass = "rounded-lg bg-white text-gray-800 max-w-md w-auto mx-2 my-1 shadow-lg border border-gray-200 transition-all duration-300 ease-in-out";
   
+    if (isCurrentUser) {
+      messageClass += " items-end justify-end";
+      messageClass += " hover:border-blue-400";
+    } else {
+      messageClass += " items-start justify-start";
+      messageClass += " hover:border-emerald-400";
+    }
+  
+    return messageClass;
+  };
+  
+
+  const getTimeClass = () => {
+    let timeClass = "px-4 py-1 text-xs text-white rounded-b-lg";
+
+    if (isCurrentUser) {
+      timeClass += " bg-blue-500";
+    } else {
+      timeClass += " bg-emerald-500";
+    }
+
+    return timeClass;
+  };
+
   return (
     <div className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'} mb-4`}>
       <div className="flex flex-col items-end">
-        <div className={`rounded-lg bg-white text-gray-800 max-w-md w-auto mx-2 my-1 shadow-lg border border-gray-200 transition-all duration-300 ease-in-out hover:shadow-2xl hover:border-blue-400 ${isCurrentUser ? 'items-end' : 'items-start'}`}>
+        <div className={getMessageClass()}>
           <div className="px-4 py-3">
-            <p className="text-xs font-thin">{sender}</p>
+            <p className="text-xs font-thin">{isCurrentUser?'You':sender}</p>
             <p className="text-sm font-medium">{message}</p>
           </div>
-          <div className={`px-4 py-1 ${isCurrentUser ? 'bg-blue-500' : 'bg-emerald-500'}  text-xs text-white rounded-b-lg`}>
+          <div className={getTimeClass()}>
             {timeAgo}
           </div>
         </div>

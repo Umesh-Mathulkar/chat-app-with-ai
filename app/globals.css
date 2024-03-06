@@ -20,4 +20,168 @@ body {
   }
 }
 
+/* .gradient-border {
+  position: relative;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.gradient-border:before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  bottom: -2px;
+  right: -2px;
+  background: linear-gradient(to right, #90AFC5, #336B87, #2A3132, #763626);
+  z-index: -1;
+  animation: gradientAnimation 10s linear infinite;
+}
+
+@keyframes gradientAnimation {
+  0% {
+      border-image-source: linear-gradient(to right, #90AFC5, #336B87, #2A3132, #763626);
+  }
+  10% {
+      border-image-source: linear-gradient(to right, #336B87, #2A3132, #763626, #90AFC5);
+  }
+  30% {
+      border-image-source: linear-gradient(to right, #2A3132, #763626, #90AFC5, #336B87);
+  }
+  50% {
+      border-image-source: linear-gradient(to right, #763626, #90AFC5, #336B87, #2A3132);
+  }
+  70% {
+      border-image-source: linear-gradient(to right, #90AFC5, #336B87, #2A3132, #763626);
+  }
+  80% {
+      border-image-source: linear-gradient(to right, #336B87, #2A3132, #763626, #90AFC5);
+  }
+  100% {
+      border-image-source: linear-gradient(to right, #90AFC5, #336B87, #2A3132, #763626);
+  }
+} */
+
+
+
+.loader-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.gradient-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    70deg, 
+    #2D3748, 
+    #2C3646, 
+    #283142, 
+    #252D3D, 
+    #22262d, 
+    #252D3D,
+    #283142,
+    #2C3646,
+    #2a3c58,
+    #2F445E,
+    #345B85,
+    #3A729D,
+    #456299, 
+    #4F7FB4,
+    #5e87c4,
+    #4F7FB4,
+    #456299, 
+    #3A729D,
+    #345B85,
+    #385b8f,
+    #3E6DA1,
+    #4c6d9f,
+    #5A80AD);
+    background-blend-mode: screen;
+  background-size: 1500% 1500%; /* Increased background-size */ 
+  animation: gradient 100s ease infinite; /* Slower animation */
+}
+
+.spinner-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  5% {
+    background-position: 10% 50%;
+  }
+  10% {
+    background-position: 20% 50%;
+  }
+  15% {
+    background-position: 30% 50%;
+  }
+  20% {
+    background-position: 40% 50%;
+  }
+  25% {
+    background-position: 50% 50%;
+  }
+  30% {
+    background-position: 60% 50%;
+  }
+  35% {
+    background-position: 70% 50%;
+  }
+  40% {
+    background-position: 80% 50%;
+  }
+  45% {
+    background-position: 90% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  55% {
+    background-position: 90% 50%;
+  }
+  60% {
+    background-position: 80% 50%;
+  }
+  65% {
+    background-position: 70% 50%;
+  }
+  70% {
+    background-position: 60% 50%;
+  }
+  75% {
+    background-position: 50% 50%;
+  }
+  80% {
+    background-position: 40% 50%;
+  }
+  85% {
+    background-position: 30% 50%;
+  }
+  90% {
+    background-position: 20% 50%;
+  }
+  95% {
+    background-position: 10% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+
 
