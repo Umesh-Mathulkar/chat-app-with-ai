@@ -10,7 +10,7 @@ import {
   addChatMessage,
   clearChats,
 } from "@/app/store/chatSlice";
-import { localApiUrl } from "@/app/config/apiUrl";
+import { apiUrl, localApiUrl } from "@/app/config/apiUrl";
 
 const useChat = () => {
   const dispatch = useDispatch();
@@ -20,7 +20,7 @@ const useChat = () => {
   const socketRef = useRef();
   const requestQueue = useRef([]);
 
-  const API_URL = localApiUrl;
+  const API_URL = apiUrl;
 
   useEffect(() => {
     if (status !== "loading") {
