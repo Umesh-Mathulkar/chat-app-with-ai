@@ -25,7 +25,7 @@ const TypingEffect = () => {
                 // Start typing again
                 typeText();
               }
-            }, 4000); // 4 seconds delay
+            }, 2000); // 4 seconds delay
           }
         }
       };

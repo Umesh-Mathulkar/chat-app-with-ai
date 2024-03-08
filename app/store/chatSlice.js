@@ -36,6 +36,9 @@ const chatSlice = createSlice({
     setReceiver: (state, action) => {
       state.receiver = action.payload;
     },
+    clearChats: (state) => {
+      state.chatHistory = [];
+    }
   },
 });
 
@@ -47,7 +50,8 @@ export const {
   setChatRoomId, 
   setIsLoading, 
   setReceiver ,
-  addChatMessage
+  addChatMessage,
+  clearChats
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

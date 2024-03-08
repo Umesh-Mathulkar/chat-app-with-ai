@@ -8,15 +8,24 @@ import { FaPaperPlane, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import Loader from "./Loader";
 import Image from "next/image";
+import { useDispatch, useSelector } from "react-redux";
+import { clearChats } from "@/app/store/chatSlice";
 
 const Users = () => {
   const { data: session } = useSession();
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [firstLoad, setFirstLoad] = useState(true);
   const router = useRouter();
+  const dispatch = useDispatch();
+  const {
+    chatRoomId,
+  } = useSelector((state) => state.chat);
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
+        dispatch(clearChats())
         setIsLoading(true);
         const res = await axios.post("/api/users/fetch");
         const users = res.data.users.filter(
@@ -24,14 +33,20 @@ const Users = () => {
         ); // Exclude the logged-in user
         setUsers(users);
 
-        // Set a minimum loading time
-        const MIN_LOADING_TIME = 2000;
-        const endTime = Date.now() + MIN_LOADING_TIME;
-        const remainingTime = endTime - Date.now();
-        if (remainingTime > 0) {
-          setTimeout(() => {
+        // Set a minimum loading time for the first load only
+        if (firstLoad) {
+          const MIN_LOADING_TIME = 5000;
+          const endTime = Date.now() + MIN_LOADING_TIME;
+          const remainingTime = endTime - Date.now();
+          if (remainingTime > 0) {
+            setTimeout(() => {
+              setIsLoading(false);
+              setFirstLoad(false);
+            }, remainingTime);
+          } else {
             setIsLoading(false);
-          }, remainingTime);
+            setFirstLoad(false);
+          }
         } else {
           setIsLoading(false);
         }
@@ -43,6 +58,7 @@ const Users = () => {
 
     fetchUsers();
   }, [session]);
+
   useEffect(() => {
     if (!session) {
       router.push("/");
