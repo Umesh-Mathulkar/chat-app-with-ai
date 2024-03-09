@@ -16,22 +16,20 @@ import {
 } from "@/app/store/chatSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../../components/Loader/Loader";
+import ChatLayout from "../components/ChatLayout";
 export default function MyComponent({ params }) {
   const { data: session, status } = useSession();
+  const messagesEndRef = useRef(null);
   const [user, setUser] = useState(null);
   const [chatsLoading, setIsChatsLoading] = useState(true);
   const receiver = decodeURIComponent(params.email[0]);
 
-  const {
-    chatHistory,
-    suggestedResponses,
-    selectedResponse,
-    isLoading,
-    chatRoomId,
-  } = useSelector((state) => state.chat);
+  const { chatHistory } = useSelector((state) => state.chat);
+
   const dispatch = useDispatch();
-  const { handleUserInput } = useChat();
+
   const [shouldRender, setShouldRender] = useState(false);
+
   useEffect(() => {
     if (status !== "loading") {
       setUser(session?.user);
@@ -58,24 +56,6 @@ export default function MyComponent({ params }) {
     }
   }, [receiver, user]);
 
-  const chatContainerRef = useRef(null);
-  const chatInputRef = useRef(null);
-
-  useChatScroll(chatContainerRef, chatInputRef, chatHistory);
-
-  const handleSuggestionClick = useCallback(
-    (suggestion) => {
-      dispatch(setSelectedResponse(suggestion));
-    },
-    [setSelectedResponse]
-  );
-  // useEffect(() => {
-  //   // Clear chat history when the component is unmounted
-  //   return () => {
-  //     dispatch(clearChats());
-  //   };
-  // }, [dispatch]);
-
   useEffect(() => {
     // Set a small delay before rendering the chat messages
     const timer = setTimeout(() => {
@@ -87,38 +67,32 @@ export default function MyComponent({ params }) {
       clearTimeout(timer);
     };
   }, []);
+  
+  useEffect(() => {
+    if (shouldRender) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [shouldRender,chatHistory]);
+
   return (
     <div className="flex flex-col h-screen bg-gray-100">
-      <div
-        className="flex flex-col flex-1 overflow-y-auto p-4"
-        ref={chatContainerRef}
-      >
-        {shouldRender ? (
-          chatHistory.map((chat, index) => (
-            <ChatMessage
-              key={index}
-              message={chat.message}
-              sender={chat.sender}
-              timestamp={chat.timestamp}
-            />
-          ))
-        ) : (
-          <Loader isLoading={!shouldRender}></Loader>
-        )}
-      </div>
-      <div
-        className="px-4 py-3 bg-white border-t border-gray-300 fixed bottom-0 w-full "
-        ref={chatInputRef}
-      >
-        <SuggestionBox
-          suggestedResponses={suggestedResponses}
-          handleSuggestionClick={handleSuggestionClick}
-          isLoading={isLoading}
-        />
-        <div className="max-w-[700px]">
-          <ChatInput onSubmit={handleUserInput} suggestion={selectedResponse} />
+      <ChatLayout  user={receiver}>
+        <div className="flex flex-col flex-1 overflow-y-auto p-4">
+          {shouldRender ? (
+            chatHistory.map((chat, index) => (
+              <ChatMessage
+                key={index}
+                message={chat.message}
+                sender={chat.sender}
+                timestamp={chat.timestamp}
+              />
+            ))
+          ) : (
+            <Loader isLoading={!shouldRender}></Loader>
+          )}
+          <div ref={messagesEndRef} />
         </div>
-      </div>
+      </ChatLayout>
     </div>
   );
 }
