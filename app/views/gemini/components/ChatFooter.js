@@ -5,7 +5,7 @@ import useChat from "../hooks/useChat";
 import { setSelectedResponse } from "@/app/store/chatSlice";
 import ChatInput from "./ChatInput";
 
-const ChatFooter = () => {
+const ChatFooter = ({className}) => {
     const dispatch = useDispatch();
   const { suggestedResponses, selectedResponse, isLoading, chatRoomId } =
     useSelector((state) => state.chat);
@@ -18,7 +18,7 @@ const ChatFooter = () => {
     [setSelectedResponse]
   );
   return (
-    <div className="w-full px-4 py-3 bg-white border-t border-gray-300"> 
+    <div className={`w-full px-4 py-3 bg-white border-t border-gray-300 ${className}`}> 
       <SuggestionBox
         suggestedResponses={suggestedResponses}
         handleSuggestionClick={handleSuggestionClick}
