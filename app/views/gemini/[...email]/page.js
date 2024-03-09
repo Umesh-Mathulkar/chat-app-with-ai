@@ -15,7 +15,7 @@ import {
   clearChats,
 } from "@/app/store/chatSlice";
 import { useDispatch, useSelector } from "react-redux";
-import Loader from "../../chats/Loader";
+import Loader from "../../../components/Loader/Loader";
 export default function MyComponent({ params }) {
   const { data: session, status } = useSession();
   const [user, setUser] = useState(null);

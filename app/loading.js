@@ -1,5 +1,5 @@
 'use client'
-import Spinner from '@/app/views/chats/spinner'
+import Spinner from '@/app/components/Loader/spinner'
 
 const Loading = ()=>{
     <div className="loader-container">

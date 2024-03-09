@@ -20,47 +20,25 @@ body {
   }
 }
 
-/* .gradient-border {
-  position: relative;
-  border-radius: 15px;
-  overflow: hidden;
+
+
+.logo {
+  font-family: var(--font-lato);
+}
+p {
+  font-family: var(--font-montserrat);
 }
 
-.gradient-border:before {
-  content: "";
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  bottom: -2px;
-  right: -2px;
-  background: linear-gradient(to right, #90AFC5, #336B87, #2A3132, #763626);
-  z-index: -1;
-  animation: gradientAnimation 10s linear infinite;
+h2 {
+  font-family: var(--font-poppins);
 }
 
-@keyframes gradientAnimation {
-  0% {
-      border-image-source: linear-gradient(to right, #90AFC5, #336B87, #2A3132, #763626);
-  }
-  10% {
-      border-image-source: linear-gradient(to right, #336B87, #2A3132, #763626, #90AFC5);
-  }
-  30% {
-      border-image-source: linear-gradient(to right, #2A3132, #763626, #90AFC5, #336B87);
-  }
-  50% {
-      border-image-source: linear-gradient(to right, #763626, #90AFC5, #336B87, #2A3132);
-  }
-  70% {
-      border-image-source: linear-gradient(to right, #90AFC5, #336B87, #2A3132, #763626);
-  }
-  80% {
-      border-image-source: linear-gradient(to right, #336B87, #2A3132, #763626, #90AFC5);
-  }
-  100% {
-      border-image-source: linear-gradient(to right, #90AFC5, #336B87, #2A3132, #763626);
-  }
-} */
+li {
+  font-family: var(--font-roboto-mono);
+}
+.name {
+  font-family: var(--font-montserrat);
+}
 
 
 
@@ -107,6 +85,27 @@ body {
   background-size: 1500% 1500%; /* Increased background-size */ 
   animation: gradient 100s ease infinite; /* Slower animation */
 }
+
+.users-gradient-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    270deg, 
+    #4B0082, /* Indigo */
+    #9338AC, /* Purpureus */
+    /* #DA70D6, Orchid */
+    #408d82, /* Tiffany Blue */
+    #6FAED9, /* Carolina Blue */
+    #800080  /* Base Purple */
+  );
+    background-blend-mode: screen;
+  background-size: 1500% 1500%; /* Increased background-size */ 
+  animation: gradient 500s ease infinite; /* Slower animation */
+}
+
 
 .spinner-wrapper {
   position: relative;

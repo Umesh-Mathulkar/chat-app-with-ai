@@ -6,7 +6,7 @@ import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { FaPaperPlane, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import Loader from "./Loader";
+import Loader from "../../components/Loader/Loader";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { clearChats } from "@/app/store/chatSlice";
@@ -67,15 +67,11 @@ const Users = () => {
 
   return (
     <Loader isLoading={isLoading}>
-      <div className="min-h-screen bg-gradient-to-r from-indigo-900 to-purple-900 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen users-gradient-bg flex items-center justify-center px-4 sm:px-6 lg:px-8">
         {session && (
           <div className="absolute top-0 right-0 m-6 flex items-center space-x-4">
             <div className="relative w-10 h-10 overflow-hidden rounded-full">
-              {/* <img
-              src={session.user.image}
-              alt={session.user.name}
-              className="w-full h-full object-cover shadow-lg"
-            /> */}
+          
               <Image
                 className="w-full h-full object-cover shadow-lg"
                 src={session.user.image}
@@ -128,7 +124,7 @@ const Users = () => {
                     <div>
                       <Link
                         href={`/views/gemini/${user.email}`}
-                        className="block text-lg font-semibold text-white hover:text-white/70 transition-colors duration-300 ease-in-out"
+                        className="block name text-lg font-semibold text-white hover:text-white/70 transition-colors duration-300 ease-in-out"
                       >
                         {user.name}
                       </Link>
