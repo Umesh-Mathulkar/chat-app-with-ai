@@ -4,6 +4,7 @@ const chatSlice = createSlice({
   name: 'chat',
   initialState: {
     user: null,
+    allUsers:null,
     chatHistory: [],
     suggestedResponses: [],
     selectedResponse: "",
@@ -14,6 +15,9 @@ const chatSlice = createSlice({
   reducers: {
     setUser: (state, action) => {
       state.user = action.payload;
+    },
+    setAllUsers: (state, action) => {
+      state.allUsers = action.payload;
     },
     addChatMessage: (state, action) => {
       state.chatHistory.push(action.payload);
@@ -44,6 +48,7 @@ const chatSlice = createSlice({
 
 export const { 
   setUser, 
+  setAllUsers,
   setChatHistory, 
   setSuggestedResponses, 
   setSelectedResponse, 

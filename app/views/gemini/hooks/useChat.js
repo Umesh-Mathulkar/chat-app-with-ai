@@ -16,7 +16,7 @@ const useChat = () => {
   const dispatch = useDispatch();
   const { data: session, status } = useSession();
   const chatState = useSelector((state) => state.chat);
-  console.log(chatState.chatHistory, "chat history", chatState.chatRoomId);
+
   const socketRef = useRef();
   const requestQueue = useRef([]);
 

@@ -1,0 +1,27 @@
+{
+    "theme_color": "#6dd2cc",
+    "background_color": "#75bace",
+    "display": "standalone",
+    "scope": "/",
+    "start_url": "/",
+    "name": "ChatMan",
+    "short_name": "ChatMan",
+    "description": "An AI Powered Chat APP",
+    "icons": [
+        {
+            "src": "/logo.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/logo.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "/logo.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

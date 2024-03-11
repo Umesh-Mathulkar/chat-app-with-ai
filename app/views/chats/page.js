@@ -9,29 +9,27 @@ import { useRouter } from "next/navigation";
 import Loader from "../../components/Loader/Loader";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
-import { clearChats } from "@/app/store/chatSlice";
+import { clearChats, setAllUsers } from "@/app/store/chatSlice";
 
 const Users = () => {
   const { data: session } = useSession();
-  const [users, setUsers] = useState([]);
+
   const [isLoading, setIsLoading] = useState(true);
   const [firstLoad, setFirstLoad] = useState(true);
   const router = useRouter();
   const dispatch = useDispatch();
-  const {
-    chatRoomId,
-  } = useSelector((state) => state.chat);
+  const { chatRoomId, allUsers } = useSelector((state) => state.chat);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        dispatch(clearChats())
+        dispatch(clearChats());
         setIsLoading(true);
         const res = await axios.post("/api/users/fetch");
         const users = res.data.users.filter(
           (user) => session && user.email !== session.user.email
         ); // Exclude the logged-in user
-        setUsers(users);
+        await dispatch(setAllUsers(users));
 
         // Set a minimum loading time for the first load only
         if (firstLoad) {
@@ -71,7 +69,6 @@ const Users = () => {
         {session && (
           <div className="absolute top-0 right-0 m-6 flex items-center space-x-4">
             <div className="relative w-10 h-10 overflow-hidden rounded-full">
-          
               <Image
                 className="w-full h-full object-cover shadow-lg"
                 src={session.user.image}
@@ -107,7 +104,7 @@ const Users = () => {
               </h2>
             </div>
             <div className="divide-y divide-white/20">
-              {users.map((user) => (
+              {allUsers?.map((user) => (
                 <div
                   key={user._id}
                   className="py-4 px-2 group hover:bg-white/20 transition-all duration-300 ease-in-out rounded-lg flex flex-col sm:flex-row items-center justify-between"
