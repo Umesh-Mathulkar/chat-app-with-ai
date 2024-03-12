@@ -22,7 +22,7 @@ const SecurityPrivacy = () => {
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-gray-800">End-to-End Encryption</h3>
                 <p className="text-gray-600">
-                  Every message is encrypted from start to finish, ensuring that only you and the person you're communicating with can read what is sent.
+                  Every message is encrypted from start to finish, ensuring that only you and the person you&apos;re communicating with can read what is sent.
                 </p>
               </div>
             </div>
@@ -31,7 +31,7 @@ const SecurityPrivacy = () => {
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-gray-800">Data Privacy</h3>
                 <p className="text-gray-600">
-                  Your personal data belongs to you. We don't sell it to advertisers or third parties.
+                  Your personal data belongs to you. We don&apos;t sell it to advertisers or third parties.
                 </p>
               </div>
             </div>

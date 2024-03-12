@@ -9,19 +9,19 @@ const testimonialsData = [
   {
     id: 1,
     name: "Amrut Tawade",
-    feedback: "ChatMan has revolutionized the way I communicate. It's like having a friend who always knows what to say!",
+    feedback: "ChatMan has revolutionized the way I communicate. It&apos;s like having a friend who always knows what to say!",
     avatar: User1 // Replace with actual path
   },
   {
     id: 2,
     name: "Ghansham Mulkalwar",
-    feedback: "The AI suggestions are incredibly accurate and helpful. It's made my daily chats so much more efficient!",
+    feedback: "The AI suggestions are incredibly accurate and helpful. It&apos;s made my daily chats so much more efficient!",
     avatar: User2 // Replace with actual path
   },
   {
     id: 3,
     name: "Subhash Rane",
-    feedback: "I was skeptical about AI in chatting, but ChatMan has completely won me over. It's intuitive and smart!",
+    feedback: "I was skeptical about AI in chatting, but ChatMan has completely won me over. It&apos;s intuitive and smart!",
     avatar: User3// Replace with actual path
   }
 ];

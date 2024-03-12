@@ -3,8 +3,8 @@ import React from 'react';
 
 const faqData = [
   {
-    question: "How does ChatMan's AI help me in conversations?",
-    answer: "ChatMan's AI analyzes your conversation patterns to provide contextually relevant suggestions, making your interactions smoother and more natural."
+    question: "How does ChatMan&apos;s AI help me in conversations?",
+    answer: "ChatMan&apos;s AI analyzes your conversation patterns to provide contextually relevant suggestions, making your interactions smoother and more natural."
   },
   {
     question: "Is my data safe with ChatMan?",
@@ -16,7 +16,7 @@ const faqData = [
   },
   {
     question: "What makes ChatMan different from other chat apps?",
-    answer: "ChatMan's unique AI adapts to your personal communication style, providing an unparalleled chatting experience that grows with you."
+    answer: "ChatMan&apos;s unique AI adapts to your personal communication style, providing an unparalleled chatting experience that grows with you."
   }
 ];
 
@@ -27,7 +27,7 @@ const FAQs = () => {
         <div className="text-center">
           <h2 className="text-base text-indigo-600 font-semibold tracking-wide uppercase">Got Questions?</h2>
           <p className="mt-1 text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
-            We've Got Answers
+            We&apos;ve Got Answers
           </p>
           <p className="max-w-xl mt-5 mx-auto text-xl text-gray-500">
             Check out our FAQs to learn more about ChatMan.
