@@ -20,6 +20,24 @@ body {
   }
 }
 
+.fade-in-list {
+  animation: fadeInOut 9s ease-in-out;
+}
+
+.fade-in-section {
+  opacity: 0;
+  transition: opacity 0.5s ease-out 0.3s;
+}
+
+.fade-in-section.is-visible {
+  opacity: 1;
+}
+
+
+@keyframes fadeInOut {
+  0%, 11.1%, 100% { opacity: 0; }
+  11.1%, 88.9% { opacity: 1; }
+}
 
 
 .logo {

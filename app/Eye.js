@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 const Eye = ({ id }) => {
   const [position, setPosition] = useState({ x: 50, y: 50 });
   const [transition, setTransition] = useState('0.4s ease-out');
   const [isBlinking, setIsBlinking] = useState(false);
+  const eyeRef = useRef(null);
 
   const updatePosition = (event) => {
     const eye = document.getElementById(id);
@@ -30,6 +31,24 @@ const Eye = ({ id }) => {
     window.addEventListener('mousemove', updatePosition);
     const blinkInterval = setInterval(() => blink(), 4000);
 
+    const eye = eyeRef.current;
+    if (eye) {
+      eye.animate(
+        [
+          // keyframes
+          { transform: "translateY(0px)" },
+          { transform: "translateY(-10px)" },
+          { transform: "translateY(0px)" },
+        ],
+        {
+          // timing options
+          duration: 2000,
+          iterations: Infinity,
+          easing: "ease-in-out",
+        }
+      );
+    }
+
     return () => {
       window.removeEventListener('mousemove', updatePosition);
       clearInterval(blinkInterval);
@@ -39,6 +58,7 @@ const Eye = ({ id }) => {
   return (
     <div
       id={id}
+      ref={eyeRef}
       style={{
         position: 'fixed',
         top: '10px',

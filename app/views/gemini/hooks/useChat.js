@@ -20,7 +20,7 @@ const useChat = () => {
   const socketRef = useRef();
   const requestQueue = useRef([]);
 
-  const API_URL = apiUrl;
+  const API_URL = localApiUrl;
 
   useEffect(() => {
     if (status !== "loading") {
@@ -33,7 +33,10 @@ const useChat = () => {
     const socket = io.connect(API_URL);
 
     socket.on("message", async (data) => {
-      // Dispatch an action to append the new message to the chat history
+      dispatch(addChatMessage(data));
+    });
+
+    socket.on("fileUpload", async (data) => {
       dispatch(addChatMessage(data));
     });
 
@@ -43,7 +46,6 @@ const useChat = () => {
     const signal = controller.signal;
 
     const fetchMessages = async () => {
-      
       try {
         if (chatState.chatRoomId) {
           const response = await axios.get(
@@ -56,9 +58,8 @@ const useChat = () => {
             { signal }
           );
           const messages = response.data;
-         
+
           if (messages.length) {
-           
             dispatch(setChatHistory(messages));
           }
         }
@@ -104,8 +105,33 @@ const useChat = () => {
     }
   };
 
+  const handleUserFile = (file) => {
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      const base64String = reader.result.split(",")[1];
+      const fileData = {
+        fileName: file.name,
+        fileData: base64String,
+        sender: chatState.user.email,
+        timestamp: new Date().getTime(),
+      };
+
+      socketRef.current.emit(
+        "fileUpload",
+        fileData,
+        [chatState.user.email, chatState.receiver],
+        chatState.user.email,
+        chatState.chatRoomId
+      );
+    };
+
+    reader.readAsDataURL(file);
+  };
+
   return {
     handleUserInput,
+    handleUserFile,
   };
 };
 
