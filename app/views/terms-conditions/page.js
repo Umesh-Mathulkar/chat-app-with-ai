@@ -44,7 +44,7 @@ const TermsAndConditions = () => {
 
           <h3 className="text-lg font-semibold text-gray-800 mt-6">Changes</h3>
           <p className="mt-2 text-gray-600">
-            We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material, we will provide at least 30 days' notice prior to any new terms taking effect.
+            We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material, we will provide at least 30 days&apos; notice prior to any new terms taking effect.
           </p>
 
           {/* Add more sections as needed */}
