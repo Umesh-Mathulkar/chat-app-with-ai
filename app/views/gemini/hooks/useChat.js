@@ -20,31 +20,22 @@ const useChat = () => {
   const socketRef = useRef();
   const requestQueue = useRef([]);
 
-  const API_URL = localApiUrl;
-
+  const API_URL = apiUrl;
   useEffect(() => {
     if (status !== "loading") {
       dispatch(setUser(session?.user));
     }
   }, [session, status]);
-
   useEffect(() => {
     dispatch(clearChats());
     const socket = io.connect(API_URL);
-
     socket.on("message", async (data) => {
+      // Dispatch an action to append the new message to the chat history
       dispatch(addChatMessage(data));
     });
-
-    socket.on("fileUpload", async (data) => {
-      dispatch(addChatMessage(data));
-    });
-
     socket.emit("joinRoom", chatState.chatRoomId);
-
     const controller = new AbortController();
     const signal = controller.signal;
-
     const fetchMessages = async () => {
       try {
         if (chatState.chatRoomId) {
@@ -71,17 +62,13 @@ const useChat = () => {
         }
       }
     };
-
     fetchMessages();
-
     socketRef.current = socket;
-
     return () => {
       controller.abort();
       socket.disconnect();
     };
   }, [chatState.chatRoomId]);
-
   useEffect(() => {
     if (chatState.chatHistory.length > 0) {
       const lastMessage =
@@ -91,48 +78,37 @@ const useChat = () => {
       }
     }
   }, [chatState.chatHistory]);
-
-  const handleUserInput = (userInput) => {
-    if (userInput) {
-      socketRef.current.emit(
-        "chatMessage",
-        userInput,
-        [chatState.user.email, chatState.receiver],
-        chatState.user.email,
-        chatState.chatRoomId
-      );
+  const handleUserInput = (userInput, file) => {
+    if (userInput || file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        // Emit the file data and the original filename over the WebSocket
+        socketRef.current.emit(
+          "chatMessage",
+          userInput,
+          [chatState.user.email, chatState.receiver],
+          chatState.user.email,
+          chatState.chatRoomId,
+          event.target.result,
+          file.name
+        );
+      };
+      if (file) {
+        reader.readAsArrayBuffer(file);
+      } else {
+        socketRef.current.emit(
+          "chatMessage",
+          userInput,
+          [chatState.user.email, chatState.receiver],
+          chatState.user.email,
+          chatState.chatRoomId
+        );
+      }
       requestQueue.current = [...requestQueue.current, userInput];
     }
   };
-
-  const handleUserFile = (file) => {
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      const base64String = reader.result.split(",")[1];
-      const fileData = {
-        fileName: file.name,
-        fileData: base64String,
-        sender: chatState.user.email,
-        timestamp: new Date().getTime(),
-      };
-
-      socketRef.current.emit(
-        "fileUpload",
-        fileData,
-        [chatState.user.email, chatState.receiver],
-        chatState.user.email,
-        chatState.chatRoomId
-      );
-    };
-
-    reader.readAsDataURL(file);
-  };
-
   return {
     handleUserInput,
-    handleUserFile,
   };
 };
-
 export default useChat;

@@ -15,6 +15,14 @@ const nextConfig = {
         protocol: "https",
         hostname: "avatars.githubusercontent.com",
       },
+      {
+        protocol: "http",
+        hostname: "localhost",
+      },
+      {
+        protocol: "https",
+        hostname: "chat-app-socket-server-0vpr.onrender.com",
+      },
     ],
   },
 };

@@ -73,7 +73,7 @@ export default function MyComponent({ params }) {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
   }, [shouldRender,chatHistory]);
-
+console.log(chatHistory);
   return (
     <div className="flex flex-col h-screen bg-gray-100">
       <ChatLayout  user={receiver}>
@@ -85,6 +85,7 @@ export default function MyComponent({ params }) {
                 message={chat.message}
                 sender={chat.sender}
                 timestamp={chat.timestamp}
+                file={chat.file}
               />
             ))
           ) : (
