@@ -71,13 +71,21 @@ const useChat = () => {
   }, [chatState.chatRoomId]);
   useEffect(() => {
     if (chatState.chatHistory.length > 0) {
-      const lastMessage =
-        chatState.chatHistory[chatState.chatHistory.length - 1];
-      if (lastMessage.sender !== chatState.user.email) {
+      let lastMessage = chatState.chatHistory[chatState.chatHistory.length - 1];
+  
+      // Go backwards until a non-null message is found
+      let i = chatState.chatHistory.length - 1;
+      while (i >= 0 && !lastMessage.message) {
+        lastMessage = chatState.chatHistory[i];
+        i--;
+      }
+  
+      if (lastMessage && lastMessage.sender !== chatState.user.email) {
         generateResponse(lastMessage.message, chatState.chatHistory, dispatch);
       }
     }
   }, [chatState.chatHistory]);
+  
   const handleUserInput = (userInput, file) => {
     if (userInput || file) {
       const reader = new FileReader();

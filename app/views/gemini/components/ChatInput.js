@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { setSuggestedResponses } from "@/app/store/chatSlice";
 import { useDispatch } from "react-redux";
-import { AiFillFileImage } from "react-icons/ai";
+import { AiFillFileImage, AiOutlineClose } from "react-icons/ai";
 
 export default function ChatInput({ onSubmit, suggestion = "" }) {
   const [inputValue, setInputValue] = useState("");
-  const [isFile, setIsFile] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
   const textAreaRef = useRef(null);
   const dispatch = useDispatch();
   const fileInputRef = useRef(null);
+
   useEffect(() => {
     setInputValue(suggestion);
   }, [suggestion]);
@@ -21,18 +22,27 @@ export default function ChatInput({ onSubmit, suggestion = "" }) {
     }
   }, [inputValue]);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const file = fileInputRef.current.files[0];
-    onSubmit(inputValue, file);
-    setInputValue("");
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+    }
+  };
+
+  const clearSelectedFile = () => {
+    setSelectedFile(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
-    dispatch(setSuggestedResponses(""));
   };
 
-
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    onSubmit(inputValue, selectedFile);
+    setInputValue("");
+    clearSelectedFile();
+    dispatch(setSuggestedResponses(""));
+  };
 
   return (
     <form
@@ -51,20 +61,32 @@ export default function ChatInput({ onSubmit, suggestion = "" }) {
         />
       </div>
       <div className="flex w-full justify-between items-center space-x-2">
-        {!isFile && (
+        <input
+          ref={fileInputRef}
+          type="file"
+          className="hidden"
+          onChange={handleFileChange}
+        />
+        {!selectedFile && (
           <AiFillFileImage
             className="cursor-pointer text-gray-500"
             size={40}
-            onClick={() => setIsFile(true)}
+            onClick={() => fileInputRef.current && fileInputRef.current.click()}
           />
         )}
-        {isFile && (
-          <input
-            ref={fileInputRef}
-            type="file"
-            className="p-2 text-sm text-gray-700 bg-gray-50 rounded-lg focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 hover:shadow"
-          />
+        {selectedFile && (
+          <div className="flex items-center">
+            <span className="text-sm text-gray-700 truncate w-40">
+              {selectedFile.name}
+            </span>
+            <AiOutlineClose
+              className="cursor-pointer text-gray-500 ml-2"
+              size={20}
+              onClick={clearSelectedFile}
+            />
+          </div>
         )}
+
         <button
           type="submit"
           className="px-4 py-2 text-white transition-colors duration-200 bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -84,6 +106,4 @@ export default function ChatInput({ onSubmit, suggestion = "" }) {
       </div>
     </form>
   );
-  
-  
 }

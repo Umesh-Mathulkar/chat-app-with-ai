@@ -13,7 +13,7 @@ export const generatePrompt = (userInput, chatHistory) => {
   // Filter chat history to the last 3 hours
   const now = new Date();
   const threeHoursAgo = new Date(now.getTime() - 3 * 60 * 60 * 1000);
-
+  chatHistory = chatHistory.filter(chat => chat.message !== null);
   const recentChatHistory = chatHistory.filter((chat) => {
     const chatTimestamp = new Date(chat.timestamp);
     return chatTimestamp >= threeHoursAgo;

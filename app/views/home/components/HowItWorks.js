@@ -37,7 +37,7 @@ const Step = ({ icon: Icon, title, description, size }) => {
   );
 };
 
-const HowItWorks = ({ iconSize }) => {
+const HowItWorks = ({ iconSize=60 }) => {
   return (
     <div className="bg-white py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -71,8 +71,5 @@ const HowItWorks = ({ iconSize }) => {
   );
 };
 
-HowItWorks.defaultProps = {
-  iconSize: 60, // Default icon size
-};
 
 export default HowItWorks;

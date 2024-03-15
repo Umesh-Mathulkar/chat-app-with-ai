@@ -2,7 +2,7 @@
 
 const withPWA = require("next-pwa")({
   dest: "public",
-  // disable:true
+  disable:true
 });
 const nextConfig = {
   images: {
